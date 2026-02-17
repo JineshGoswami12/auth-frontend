@@ -1,7 +1,7 @@
 import { useState } from "react";
 import api from "../api/axios";
 
-export default function Login() {
+function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -9,10 +9,15 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const response = await api.post("/auth/login", {
-        email,
-        password,
-      });
+      const formData = new URLSearchParams();
+      formData.append("username", email);
+      formData.append("password", password);
+
+      const response = await api.post("/auth/login", formData, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
 
       const { access_token, refresh_token } = response.data;
 
@@ -22,30 +27,37 @@ export default function Login() {
 
       alert("Login successful!");
     } catch (error) {
-      alert(error.response?.data?.detail || "Login failed");
-    }
-  };
+    console.log(error.response);
+    alert("Login failed");
+  }
+};
 
   return (
-    <div>
+    <div style={{ textAlign: "center", marginTop: "100px" }}>
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        <div>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div>
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
 
         <button type="submit">Login</button>
       </form>
     </div>
   );
 }
+
+export default Login;
