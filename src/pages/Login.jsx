@@ -1,9 +1,14 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -14,25 +19,24 @@ function Login() {
       formData.append("password", password);
 
       const response = await api.post("/auth/login", formData, {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-    });
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
 
       const { access_token, refresh_token } = response.data;
 
-      // Store tokens (we’ll improve this later)
-      localStorage.setItem("access_token", access_token);
+      login(access_token);
       localStorage.setItem("refresh_token", refresh_token);
 
-      alert("Login successful!");
+      navigate("/dashboard");
     } catch (error) {
-    console.log(error.response);
-    alert("Login failed");
-  }
-};
+      console.log(error.response);
+      alert("Login failed");
+    }
+  };
 
-  return (
+ return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
