@@ -9,7 +9,7 @@ function Dashboard() {
  useEffect(() => {
   const fetchUser = async () => {
     try {
-      const response = await api.get("/me");
+      const response = await api.get("/auth/me");
       setUser(response.data);
     } catch (error) {
       console.log("ERROR:", error);

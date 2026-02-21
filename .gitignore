@@ -23,3 +23,18 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# Node
+node_modules/
+dist/
+
+# Python
+__pycache__/
+.env
+venv/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
