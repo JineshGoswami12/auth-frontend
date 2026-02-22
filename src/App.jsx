@@ -4,7 +4,8 @@ import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Register from "./pages/Register";
 import VerifyEmail from "./pages/VerifyEmail";
-
+import ResetPassword from "./pages/ResetPassword";
+import ForgotPassword from "./pages/ForgotPassword";
 
 
 function App() {
@@ -23,6 +24,11 @@ function App() {
         <Route path="/register" element={<Register />} />  
 
         <Route path="/verify-email" element={<VerifyEmail />} />
+
+        <Route path="/reset-password" element={<ResetPassword />} />
+
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+
       </Routes>
     </BrowserRouter>
   );
