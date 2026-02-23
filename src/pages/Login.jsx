@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext , useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
@@ -7,8 +7,14 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { login } = useContext(AuthContext);
+  const { login, token } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (token) {
+      navigate("/dashboard");
+    }
+  }, [token, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -59,6 +65,18 @@ function Login() {
         </div>
 
         <button type="submit">Login</button>
+        <p>
+  Don’t have an account?{" "}
+  <span onClick={() => navigate("/register")} style={{ color: "blue", cursor: "pointer" }}>
+    Register
+  </span>
+</p>
+
+<p>
+  <span onClick={() => navigate("/forgot-password")} style={{ color: "blue", cursor: "pointer" }}>
+    Forgot Password?
+  </span>
+</p>
       </form>
     </div>
   );
