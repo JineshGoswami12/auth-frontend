@@ -2,10 +2,13 @@ import { useState, useContext , useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
+import toast from "react-hot-toast";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const { login, token } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -17,30 +20,42 @@ function Login() {
   }, [token, navigate]);
 
   const handleLogin = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      const formData = new URLSearchParams();
-      formData.append("username", email);
-      formData.append("password", password);
+  setLoading(true);
 
-      const response = await api.post("/auth/login", formData, {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      });
+  try {
+    const formData = new URLSearchParams();
+    formData.append("username", email);
+    formData.append("password", password);
 
-      const { access_token, refresh_token } = response.data;
+    const response = await api.post("/auth/login", formData, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
 
-      login(access_token);
-      localStorage.setItem("refresh_token", refresh_token);
+    const { access_token, refresh_token } = response.data;
 
-      navigate("/dashboard");
-    } catch (error) {
-      console.log(error.response);
-      alert("Login failed");
+    login(access_token);
+    localStorage.setItem("refresh_token", refresh_token);
+
+    toast.success("Login successful 🎉");
+
+    navigate("/dashboard");
+
+  } catch (error) {
+
+    if (error.response) {
+      toast.error(error.response.data.detail);
+    } else {
+      toast.error("Server error. Please try again.");
     }
-  };
+
+  } finally {
+    setLoading(false);
+  }
+};
 
  return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>
@@ -64,7 +79,9 @@ function Login() {
           />
         </div>
 
-        <button type="submit">Login</button>
+        <button type="submit" disabled={loading}>
+        {loading ? "Logging in..." : "Login"}
+        </button>
         <p>
   Don’t have an account?{" "}
   <span onClick={() => navigate("/register")} style={{ color: "blue", cursor: "pointer" }}>
@@ -78,6 +95,11 @@ function Login() {
   </span>
 </p>
       </form>
+      {error && (
+       <p style={{ color: "red", marginTop: "10px" }}>
+        {error}
+        </p>
+      )}
     </div>
   );
 }

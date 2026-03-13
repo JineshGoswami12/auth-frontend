@@ -6,11 +6,14 @@ import Register from "./pages/Register";
 import VerifyEmail from "./pages/VerifyEmail";
 import ResetPassword from "./pages/ResetPassword";
 import ForgotPassword from "./pages/ForgotPassword";
+import Navbar from "./context/Navbar";
 
 
 function App() {
   return (
+      <>     
     <BrowserRouter>
+    <Navbar />
       <Routes>
          <Route path="/login" element={<Login/>} />
         <Route
@@ -31,6 +34,7 @@ function App() {
 
       </Routes>
     </BrowserRouter>
+    </>
   );
 }
 

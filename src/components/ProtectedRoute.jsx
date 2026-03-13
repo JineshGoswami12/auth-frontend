@@ -3,12 +3,15 @@ import { Navigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 function ProtectedRoute({ children }) {
-  const { user } = useContext(AuthContext);
+  // ✅ Change 'user' to 'token' to match  AuthProvider
+  const { token } = useContext(AuthContext);
 
-  if (!user) {
-    return <Navigate to="/login" />;
+  // If there is no token, redirect to login
+  if (!token) {
+    return <Navigate to="/login" replace />; 
   }
 
+  // If token exists, show the protected content (Dashboard)
   return children;
 }
 
